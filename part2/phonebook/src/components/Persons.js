@@ -1,10 +1,12 @@
-const Persons = ({persons}) => {
+import Person from './Person'
 
-    return (
-        <div>
-            {persons.map((person) => <p key={person.id}>{person.name}{" "}{person.number}</p>)}
-        </div>
-    )
+const Persons = ({ persons, handleDelete }) => {
+
+  return (
+    <div>
+      {persons.map((person) => <Person key={person.id} person={person} handleDelete={handleDelete} />)}
+    </div>
+  )
 }
 
 export default Persons
