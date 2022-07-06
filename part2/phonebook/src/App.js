@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Form from './components/Form'
 import Persons from './components/Persons'
 import services from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,6 +12,8 @@ const App = () => {
     number: ''
   })
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState(0)
 
   useEffect(() => {
     services
@@ -44,6 +47,9 @@ const App = () => {
       .create(personObject)
       .then(response => {
         setPersons(persons.concat(response.data))
+        setMessageType(0)
+        setMessage(`Added ${response.data.name}`)
+        setTimeout(() => setMessage(null), 5000)
       })
   }
 
@@ -62,6 +68,17 @@ const App = () => {
         .then(response => {
           console.log('Delete Successful!');
           setPersons(persons.filter(p => p.id !== person.id))
+          setMessageType(0)
+          setMessage(`Delete ${person.name} successful`)
+          setTimeout(() => setMessage(null), 5000)
+        })
+        .catch(error => {
+          setPersons(persons.filter(p => p.id !== person.id))
+          setMessageType(1)
+          setMessage(`Information of ${person.name} has already been removed from server`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
         })
   }
 
@@ -71,6 +88,7 @@ const App = () => {
       <div>
         filter shown with<input value={filter} onChange={(event) => setFilter(event.target.value)}/>
       </div>
+      <Notification message={message} type={messageType}/>
       <h2>add a new</h2>
       <Form newPerson={newPerson} setPerson={setPerson} addPerson={addPerson}/>
       <h2>Numbers</h2>
