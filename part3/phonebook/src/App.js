@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Form from './components/Form'
 import Persons from './components/Persons'
@@ -40,6 +39,13 @@ const App = () => {
           .then(response => {
             setPersons(persons.map(p => p.id === persons[i].id ? personObject : p))
           })
+          .catch(error => {
+            setMessageType(1)
+            setMessage(error.response.data.error)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000);
+          })
         return
       }
     }
@@ -50,6 +56,13 @@ const App = () => {
         setMessageType(0)
         setMessage(`Added ${response.data.name}`)
         setTimeout(() => setMessage(null), 5000)
+      })
+      .catch(error => {
+        setMessageType(1)
+        setMessage(error.response.data.error)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000);
       })
   }
 
